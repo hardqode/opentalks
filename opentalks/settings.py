@@ -158,7 +158,7 @@ ACCOUNT_ADAPTER = "allauth.account.adapter.DefaultAccountAdapter"
 LOGIN_REDIRECT_URL = '/'
 
 
-FROALA_INCLUDE_JQUERY = False
+# FROALA_INCLUDE_JQUERY = False
 
 FROALA_EDITOR_PLUGINS = ('align', 'char_counter', 'code_beautifier', 'code_view', 'colors', 'draggable', 'emoticons',
                          'entities', 'file', 'font_family', 'font_size', 'fullscreen', 'image_manager', 'image',

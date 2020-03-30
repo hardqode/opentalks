@@ -106,6 +106,7 @@
 
 {% block page_js %}
     <script type="text/javascript" src="{% static 'froala_editor/js/froala_editor.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/froala-django.js' %}"></script>
     <script type="text/javascript" src="{% static 'froala_editor/js/plugins/image.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'froala_editor/js/plugins/video.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'froala_editor/js/plugins/paragraph_format.min.js' %}"></script>
@@ -122,38 +123,17 @@
 {#    <script type="text/javascript" src="{% static 'core/js/bootstrap-datetimepicker.min.js' %}"></script>#}
     <script src="{% static 'core/js/jquery.datetimepicker.full.min.js' %}"></script>
     <script>
-
-        {#$(function () {#}
-        {#    $('#id_full_description').froalaEditor({#}
-        {#        "inlineMode": false,#}
-        {#        "toolbarButtons": ['bold', 'italic', 'insertLink', 'insertHR', 'clearFormatting', '|', 'paragraphFormat', 'quote', 'insertImage', 'insertVideo', '|', 'formatOL', 'formatUL', 'align', '|', 'undo', 'redo'],#}
-        {#        "imageUploadURL": "/froala_editor/image_upload/",#}
-        {#        "imageUploadParams": {"csrfmiddlewaretoken": "{{ csrf_token }}"},#}
-        {#        "fileUploadURL": "/froala_editor/file_upload/",#}
-        {#        "fileUploadParams": {"csrfmiddlewaretoken": "{{ csrf_token }}"},#}
-        {#        "videoAllowedProviders": ['youtube', 'vimeo'],#}
-        {#        "videoUpload": false,#}
-        {#        "height": 400#}
-        {#    })#}
-        {#});#}
-
-        {#$(function () {#}
-        {#    $('#id_start_at').datetimepicker({#}
-        {#        icons: {#}
-        {#            today: "fa fa-bomb",#}
-        {#            date: "fa fa-calendar",#}
-        {#            time: "fa fa-clock-o",#}
-        {#            up: "fa fa-arrow-up",#}
-        {#            next: "fa fa-arrow-right",#}
-        {#            down: "fa fa-arrow-down",#}
-        {#            previous: "fa fa-arrow-left",#}
-        {#            clear: "fa fa-circle-o",#}
-        {#            close: "fa fa-times"#}
-        {#        },#}
-        {#        locale: 'en',#}
-        {#        format: 'MM.DD.YYYY HH:mm',#}
-        {#    });#}
-        {#});#}
+    $('#id_full_description').froalaEditor({
+        "inlineMode": false,
+        "toolbarButtons": ['bold', 'italic', 'insertLink', 'insertHR', 'clearFormatting', '|', 'paragraphFormat', 'quote', 'insertImage', 'insertVideo', '|', 'formatOL', 'formatUL', 'align', '|', 'undo', 'redo'],
+        "imageUploadURL": "/froala_editor/image_upload/",
+        "imageUploadParams": {"csrfmiddlewaretoken": "{{ csrf_token }}"},
+        "fileUploadURL": "/froala_editor/file_upload/",
+        "fileUploadParams": {"csrfmiddlewaretoken": "{{ csrf_token }}"},
+        "videoAllowedProviders": ['youtube', 'vimeo'],
+        "videoUpload": false,
+        "height": 300
+    });
 
     $('#id_start_at').datetimepicker({
       format: 'Y-m-d H:i',

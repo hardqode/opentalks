@@ -32,13 +32,14 @@ class UserEventListView(ListView):
 
         return context
 
+
 class CountryEventListView(ListView):
     model = Event
     slug_field = 'country'
 
     def get_queryset(self):
         country = get_object_or_404(Country, slug=self.kwargs['slug'])
-        return Event.objects.filter(country = country, is_active=True)
+        return Event.objects.filter(country=country, is_active=True)
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -46,7 +47,7 @@ class CountryEventListView(ListView):
         country = get_object_or_404(Country, slug=self.kwargs['slug'])
         # Add in the website
         context['specific_country'] = country
-        context['country_list'] = Country.objects.filter(is_active=True).exclude(id = country.id)
+        context['country_list'] = Country.objects.filter(is_active=True).exclude(id=country.id)
 
         return context
 
@@ -83,7 +84,7 @@ class EventDetailView(DetailView):
         context['joined_users'] = EventParticipant.objects.filter(event=event)
         if self.request.user.is_authenticated:
             context['event_participant'] = EventParticipant.objects.filter(user=self.request.user,
-                                                                       event=event).exists()
+                                                                           event=event).exists()
 
         return context
 
@@ -158,7 +159,7 @@ class UserUnjoinView(UpdateView):
     fields = []
 
     def form_valid(self, form):
-        ep = get_object_or_404(EventParticipant, event = self.kwargs['pk'], user = self.request.user)
+        ep = get_object_or_404(EventParticipant, event=self.kwargs['pk'], user=self.request.user)
         ep.delete()
 
         return super(UserUnjoinView, self).form_valid(form)

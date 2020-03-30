@@ -1,0 +1,167 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block page_css %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css"
+          media="all" rel="stylesheet"/>
+    <link href="{% static 'froala_editor/css/froala_editor.min.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link href="{% static 'froala_editor/css/froala_style.min.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link href="{% static 'froala_editor/css/plugins/image.min.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link href="{% static 'core/css/lightgallery.css' %}" type="text/css" media="all" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <div class="container ">
+        <div class="row">
+            <div class="col-md-8 col-12 pt-4">
+                {{ form.error }}
+                {{ form.errors }}
+
+                <h4>{{ object.title }}</h4>
+                <div class="row">
+                    <div class="col-3">
+                        Status:
+                    </div>
+                    <div class="col-9">
+                        {% if object.is_active %}
+                            <span class="text-success">published</span>
+                        {% else %}
+                            <span class="text-warning">unpublished</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        Created by:
+                    </div>
+                    <div class="col-9">
+                        <a target="_blank" href="{% url 'event:user-list' object.user %}">{{ object.user }}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        When:
+                    </div>
+                    <div class="col-9">
+                        {{ object.start_at|date:'Y-m-d H:i' }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        Country:
+                    </div>
+                    <div class="col-9">
+                        {{ object.country }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        URL:
+                    </div>
+                    <div class="col-9">
+                        {% if user.is_authenticated %}
+                            <a target="_blank" href="{{ object.url }}">{{ object.url }}</a>
+                        {% else %}
+                            <p>Only registered users can view info. <a href="{% url 'account_signup' %}">Sign Up</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if object.url_id %}
+                    <div class="row">
+                        <div class="col-3">
+                            Event ID:
+                        </div>
+                        <div class="col-9">
+                            {% if user.is_authenticated %}
+                                {{ object.url_id }}
+                            {% else %}
+                                <p>Only registered users can view info. <a href="{% url 'account_signup' %}">Sign Up</a>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+                {% if object.url_password %}
+                    <div class="row">
+                        <div class="col-3">
+                            Event Password:
+                        </div>
+                        <div class="col-9">
+                            {{ object.url_password }}
+                        </div>
+                    </div>
+                {% endif %}
+                <div id="short_description" class="row pt-4">
+                    <div class="col-12">
+                        <h5>Short Description:</h5>
+                        {{ object.short_description|linebreaksbr }}
+                    </div>
+                </div>
+                <div id="full_description" class="row pt-4">
+                    <div class="col-12">
+                        <h5>Full Description:</h5>
+                        {{ object.full_description|safe }}
+                    </div>
+                </div>
+                {% if object.user == request.user %}
+                    <a href="{% url 'event:edit' object.id %}" class="btn btn-outline-primary mt-4">Edit</a>
+                    {% if object.is_active %}
+                        <form action="{% url 'event:unpublish' object.id %}" method="post" class="pt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-warning">Unpublish</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'event:publish' object.id %}" method="post" class="pt-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success">Publish</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                {% if not event_participant and user.is_authenticated %}
+                    <form action="{% url 'event:user-join' event.pk %}" method="post" class="pt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-info">Join <i class="fa fa-thumbs-up"></i></button>
+                    </form>
+                {% elif event_participant and user.is_authenticated %}
+                    <form action="{% url 'event:user-unjoin' event.pk %}" method="post" class="pt-2">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-info">Unjoin <i class="fa fa-thumbs-down"></i>
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+            <div class="col-md-4 col-12 pt-4">
+                <h4>Joined users</h4>
+                <div class="list-group">
+                    {% for ju in joined_users %}
+                        <a href="#"
+                           class="list-group-item list-group-item-action {% if ju.user == user %}list-group-item-primary{% endif %}">@{{ ju.user }}</a>
+                    {% empty %}
+                        <p>Noone joined yet ((</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'core/js/lightgallery.min.js' %}"></script>
+    <script>
+        $('.fr-fic').on('click', function () {
+            elements = [];
+            $('#details').find('img').each(function () {
+                elements.push({
+                    "src": $(this).attr('src'),
+                    'thumb': $(this).attr('src')
+                })
+            });
+            {#            console.log(elements);#}
+
+            $(this).lightGallery({
+                dynamic: true,
+                dynamicEl: elements
+            })
+        });
+    </script>
+{% endblock %}

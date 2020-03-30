@@ -1,0 +1,54 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block page_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block page_css %}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="container pt-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-4 col-md-6">
+                <a href="{% url 'core:index' %}" class="logo-link">
+                    <h3 class="text-center">OpenTalks</h3>
+                </a>
+
+                <form class="login" method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input name="login" type="text" class="form-control" aria-describedby="emailHelp"
+                               placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
+                            else.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input name="password" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="form-check">
+                        <input name="remember" type="checkbox" class="form-check-input" id="id_remember">
+                        <label class="form-check-label" for="id_remember">Remember me</label>
+                    </div>
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <div>
+                        <a class="button secondaryAction"
+                           href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                    </div>
+                    <button type="submit" class="btn btn-primary">{% trans "Sign In" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

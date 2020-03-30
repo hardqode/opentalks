@@ -1,0 +1,165 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block page_css %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" type="text/css"
+          media="all" rel="stylesheet"/>
+    <link href="{% static 'froala_editor/css/froala_editor.min.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link href="{% static 'froala_editor/css/froala_style.min.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link href="{% static 'froala_editor/css/plugins/image.min.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link href="{% static 'froala_editor/css/plugins/video.min.css' %}" type="text/css" media="all" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.css">
+
+{#    <link rel="stylesheet" href="{% static 'core/css/bootstrap-datetimepicker.min.css' %}"/>#}
+    <link rel="stylesheet" href="{% static 'core/css/jquery.datetimepicker.min.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container pt-4">
+        <div class="row">
+            <div class="col-12">
+                {{ form.error }}
+                {{ form.errors }}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {#                    <div class="form-group row">#}
+                    {#                        <label for="exampleInputEmail1" class="col-sm-2 col-form-label">Url</label>#}
+                    {#                        <div class="col-sm-10">#}
+                    {#                            <input type="url" class="form-control" id="id_url" name="url"#}
+                    {#                                   aria-describedby="emailHelp"#}
+                    {#                                   placeholder="https://google.com/page/with/bug">#}
+                    {#                            <small id="emailHelp" class="form-text text-muted">where the bug was found</small>#}
+                    {#                        </div>#}
+                    {#                    </div>#}
+                    <div class="form-group row">
+                        <label for="id_title" class="col-sm-2 col-form-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="id_title" name="title" class="form-control" required
+                                   placeholder="Please, explain it well in few words. It is very important." value="{{ object.title }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="id_start_at" class="col-sm-2 col-form-label">Start Date/Time</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="id_start_at" name="start_at" class="form-control" required
+                                   placeholder="04.30.2020" autocomplete="off" value="{{ object.start_at|date:'Y-m-d H:i' }}">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="id_url" class="col-sm-2 col-form-label">Event URL</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="id_url" name="url" class="form-control" required
+                                   placeholder="Here can be link to the Zoom room or Clickmeeting and etc"
+                                    value="{{ object.url }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="id_url_id" class="col-sm-2 col-form-label">Event ID</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="id_url_id" name="url_id" class="form-control"
+                                   placeholder="ID of the Event, if necessary" value="{{ object.url_id }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="id_url_id" class="col-sm-2 col-form-label">Event Password</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="id_url_password" name="url_password" class="form-control"
+                                   placeholder="Password of the Event, if necessary" value="{{ object.url_password }}">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="id_max_people" class="col-sm-2 col-form-label">Maximum participants</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="id_max_people" name="max_people" class="form-control" value="{% if object.max_people %}{{ object.max_people }}{% else %}10{% endif %}"
+                                   placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="id_max_people" class="col-sm-2 col-form-label">Country</label>
+                        <div class="col-sm-10">
+                            <select id="id_max_people" name="country" class="form-control">
+                                {% for country in country_list %}
+                                    <option value="{{ country.id }}" {% if object.country == country %}selected="selected"{% endif %}>{{ country.title }}</option>
+                                {% empty %}
+                                    <option value="">There's no countries yet((</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group pt-4">
+                        <label for="id_short_description">Short Description</label>
+                        <textarea id="id_short_description" name="short_description" class="form-control"
+                                  rows="3" placeholder="no more that 2 sentences" autocomplete="off">{{ object.short_description|linebreaksbr }}</textarea>
+                    </div>
+                    <div class="form-group pt-4">
+                        <label for="id_full_description">Full Description</label>
+                        <textarea id="id_full_description" name="full_description" class="form-control"
+                                  rows="6" placeholder="Explain what you want to do)))" autocomplete="off">{{ object.full_description|linebreaksbr }}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block page_js %}
+    <script type="text/javascript" src="{% static 'froala_editor/js/froala_editor.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/image.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/video.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/paragraph_format.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/fullscreen.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/link.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/quote.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/lists.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/align.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'froala_editor/js/plugins/code_view.min.js' %}"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/codemirror.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.25.0/mode/xml/xml.min.js"></script>
+{#    <script type="text/javascript" src="{% static 'core/js/bootstrap-datetimepicker.min.js' %}"></script>#}
+    <script src="{% static 'core/js/jquery.datetimepicker.full.min.js' %}"></script>
+    <script>
+
+        {#$(function () {#}
+        {#    $('#id_full_description').froalaEditor({#}
+        {#        "inlineMode": false,#}
+        {#        "toolbarButtons": ['bold', 'italic', 'insertLink', 'insertHR', 'clearFormatting', '|', 'paragraphFormat', 'quote', 'insertImage', 'insertVideo', '|', 'formatOL', 'formatUL', 'align', '|', 'undo', 'redo'],#}
+        {#        "imageUploadURL": "/froala_editor/image_upload/",#}
+        {#        "imageUploadParams": {"csrfmiddlewaretoken": "{{ csrf_token }}"},#}
+        {#        "fileUploadURL": "/froala_editor/file_upload/",#}
+        {#        "fileUploadParams": {"csrfmiddlewaretoken": "{{ csrf_token }}"},#}
+        {#        "videoAllowedProviders": ['youtube', 'vimeo'],#}
+        {#        "videoUpload": false,#}
+        {#        "height": 400#}
+        {#    })#}
+        {#});#}
+
+        {#$(function () {#}
+        {#    $('#id_start_at').datetimepicker({#}
+        {#        icons: {#}
+        {#            today: "fa fa-bomb",#}
+        {#            date: "fa fa-calendar",#}
+        {#            time: "fa fa-clock-o",#}
+        {#            up: "fa fa-arrow-up",#}
+        {#            next: "fa fa-arrow-right",#}
+        {#            down: "fa fa-arrow-down",#}
+        {#            previous: "fa fa-arrow-left",#}
+        {#            clear: "fa fa-circle-o",#}
+        {#            close: "fa fa-times"#}
+        {#        },#}
+        {#        locale: 'en',#}
+        {#        format: 'MM.DD.YYYY HH:mm',#}
+        {#    });#}
+        {#});#}
+
+    $('#id_start_at').datetimepicker({
+      format: 'Y-m-d H:i',
+        //format:'m.d.Y H:i',
+      //lang:'en'
+    });
+
+    </script>
+{% endblock %}
